@@ -1,0 +1,45 @@
+.routeFormWrapper{
+  *{
+    //border-radius: 4px;
+    border: none;
+    color: yellow;
+  }
+  background: steelblue;
+  min-width: 20%;
+  padding: 10px;
+  h2{
+    text-align: center;
+    padding: 20px;
+  }
+
+  form{
+    display: flex;
+    flex-direction: column;
+    .inputs{
+      input{
+        margin: 2px 0 2px 0;
+        //line-height: 2rem;
+        font-size: inherit;
+        padding: 5px;
+      }
+      display: flex;
+      flex-direction: column;
+      .origin, .destination{
+        display: flex;
+        flex-direction: column;
+        margin: 5px;
+      }
+    }
+    button{
+      margin: 5px;
+      width: fit-content;
+      align-self: flex-end;
+      padding: 8px;
+      background: yellow;
+      color: steelblue;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  }
+
+}
