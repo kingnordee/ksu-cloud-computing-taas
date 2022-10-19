@@ -11,44 +11,29 @@ const render = (status: Status) => {
 
 function Home() {
 
-    // // let map: google.maps.Map;
-    // let infoWindow: google.maps.InfoWindow;
-    //
-    // useEffect( () => {
-    //
-    //     try{
-    //         initMap("map");
-    //         // infoWindow  = new google.maps.InfoWindow();
-    //     }catch (e) {
-    //         console.log(e);
-    //     }
-    // }, [])
-    //
-    //
-    // return <div className='home'>
-    //     <Nav/>
-    //     <div className='homeBody'>
-    //         <div id="map"/>
-    //         <RouteInput/>
-    //     </div>
-    //
-    // </div>
+    let map: google.maps.Map;
+    let infoWindow: google.maps.InfoWindow;
 
-    const ref = React.useRef<HTMLDivElement>(null);
-    const [map, setMap] = React.useState<google.maps.Map>();
+    useEffect( () => {
 
-    React.useEffect(() => {
-        if (ref.current && !map) {
-            const thisMap = new window.google.maps.Map(ref.current, {});
-            thisMap.setCenter({lat: 34.038247902993, lng: -84.583170566728});
-            thisMap.setZoom(5);
-            setMap(thisMap);
+        try{
+            initMap("map");
+            // infoWindow  = new google.maps.InfoWindow();
+        }catch (e) {
+            console.log(e);
         }
-    }, [ref, map]);
+    }, [])
 
-    return <div className="homeBody">
-        <div id="map" ref={ref} />
+
+    return <div className='home'>
+        <Nav/>
+        <div className='homeBody'>
+            <div id="map"/>
+            <RouteInput/>
+        </div>
+
     </div>
+
 }
 
 export default Home;

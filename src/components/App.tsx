@@ -10,9 +10,9 @@ const render = (status: Status) => {
 function App() {
     return (
         <div className="App">
-            <Wrapper apiKey={"AIzaSyAqFQHTKPaDl4zftjwNBz_Jfant1f0K_RI"} render={render}>
+            {/*<Wrapper apiKey={"AIzaSyAqFQHTKPaDl4zftjwNBz_Jfant1f0K_RI"} render={render}>*/}
                 <Home/>
-            </Wrapper>
+            {/*</Wrapper>*/}
         </div>
     );
 }
