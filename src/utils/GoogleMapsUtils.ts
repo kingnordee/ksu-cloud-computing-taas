@@ -9,7 +9,7 @@ export const initMap = (elementId: string) => {
         map = new google.maps.Map(document.getElementById(elementId) as HTMLElement, {
             center: currentLocation,
             // center: { lat: GeolocationPosition.prototype.coords.latitude, lng: GeolocationPosition.prototype.coords.longitude },
-            zoom: 6
+            zoom: 7
         });
 
         const marker = new google.maps.Marker({

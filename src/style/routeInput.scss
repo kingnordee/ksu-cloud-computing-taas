@@ -7,6 +7,7 @@
   background: steelblue;
   min-width: 20%;
   padding: 10px;
+  color: navajowhite;
   h2{
     text-align: center;
     padding: 20px;
@@ -18,7 +19,7 @@
     .inputs{
       input{
         margin: 2px 0 2px 0;
-        //line-height: 2rem;
+        border: none;
         font-size: inherit;
         padding: 5px;
       }
@@ -35,8 +36,8 @@
       width: fit-content;
       align-self: flex-end;
       padding: 8px;
-      background: yellow;
-      color: steelblue;
+      background: cornflowerblue;
+      color: whitesmoke;
       font-weight: bold;
       cursor: pointer;
     }

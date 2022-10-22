@@ -1,8 +1,6 @@
 import React, {useState} from 'react';
 
 const RouteInput = () => {
-
-
     const [ state, setState ] = useState({ origin:"", destination:"" })
 
     const handleSubmit = () => {
@@ -32,7 +30,6 @@ const RouteInput = () => {
                             />
                         </div>
                     </div>
-
                     <button type="submit" onClick={handleSubmit}>Search Route</button>
                 </form>
             </div>
