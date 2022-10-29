@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Wrapper, WrapperProps, Status} from "@googlemaps/react-wrapper";
 import '../style/App.scss'
 import Home from "./Home";
+//test line
 
 const render = (status: Status) => {
     return <h1>{status}</h1>;
