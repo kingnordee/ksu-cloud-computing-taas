@@ -1,19 +1,16 @@
 @import "routeInput";
 .App {
-
     display: flex;
     flex-direction: column;
-    //min-height: 100vh;
-    //border: 1px solid red;
-    //background: cyan;
-
+    height: 100vh;
+    width: 100vw;
+    overflow: scroll;
     .home{
         display: flex;
         flex-direction: column;
         flex-grow: 1;
         height: inherit;
-        background: goldenrod;
-        //min-height: 100vh;
+        background: steelblue;
         .nav{
             background-color: steelblue;
             color: goldenrod;
@@ -26,18 +23,20 @@
             *{
                 border-radius: 4px;
             }
-
             display: flex;
             flex-grow: 1;
-            min-height: 100vh;
             #map{
                 display: flex;
                 flex-grow: 1;
-                //border: red solid 2px;
-                //height: 100vh;
-                width: 80vw;
-                //background: purple;
-                min-height: 80vh;
+                width: 70%;
+            }
+            .panel{
+                flex-grow: 1;
+                padding: 20px;
+            }
+            .renderRoute{
+                background-color: lightsteelblue;
+                padding: 20px;
             }
         }
     }
