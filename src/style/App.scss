@@ -1,44 +1,19 @@
 @import "routeInput";
+@import "Home";
 .App {
     display: flex;
     flex-direction: column;
-    height: 100vh;
+    min-height: 100vh;
+    max-height: 100vh;
     width: 100vw;
-    overflow: scroll;
-    .home{
-        display: flex;
-        flex-direction: column;
-        flex-grow: 1;
-        height: inherit;
-        background: steelblue;
-        .nav{
-            background-color: steelblue;
-            color: goldenrod;
-            font-weight: bold;
-            text-align: center;
-            padding: 20px;
-            box-shadow: inset 0 -2px 3px aliceblue;
-        }
-        .homeBody{
-            *{
-                border-radius: 4px;
-            }
-            display: flex;
-            flex-grow: 1;
-            #map{
-                display: flex;
-                flex-grow: 1;
-                width: 70%;
-            }
-            .panel{
-                flex-grow: 1;
-                padding: 20px;
-            }
-            .renderRoute{
-                background-color: lightsteelblue;
-                padding: 20px;
-            }
-        }
-    }
+    //overflow: hidden;
 
+    .nav{
+        background-color: steelblue;
+        color: goldenrod;
+        font-weight: bold;
+        text-align: center;
+        padding: 20px;
+        box-shadow: inset 0 -2px 3px aliceblue;
+    }
 }

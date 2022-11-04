@@ -3,6 +3,8 @@ import {getRandomArbitrary, IRouteRequest} from "../utils/GoogleMapsUtils";
 import RouteInput from "./RouteInput";
 import Nav from "./Nav";
 import latLng from "../utils/latLng.json";
+// import DirectionsGeocodedWaypoint = google.maps.DirectionsGeocodedWaypoint;
+// import DirectionsRoute = google.maps.DirectionsRoute;
 
 function Home() {
     let map: google.maps.Map;
@@ -28,23 +30,21 @@ function Home() {
                 position: currentLocation,
                 map: map,
             });
-
+            directionsService = new google.maps.DirectionsService();
+            directionsRenderer = new google.maps.DirectionsRenderer();
         }catch (e) {
             console.log(e);
         }
     }
 
     const handleRouteRequest = (body:  IRouteRequest) => {
-        // setRequestedRoute(body)
         getRoute(body)
     }
 
     const getRoute = (request: IRouteRequest) => {
         try {
-            directionsService = new google.maps.DirectionsService();
             directionsService.route(request, function(result, status) {
                 if (status == 'OK') {
-                    directionsRenderer = new google.maps.DirectionsRenderer();
                     directionsRenderer.setDirections(result);
                     directionsRenderer.setPanel(document.getElementById('renderRoute') as HTMLElement);
                     directionsRenderer.setMap(map)
@@ -57,11 +57,9 @@ function Home() {
             console.log("Exception: " + e);
             console.log("Request: " + JSON.stringify(request));
         }
-
     }
 
     return <div className='home'>
-        <Nav/>
         <div className='homeBody'>
             <div id="map"/>
             <div  className="panel">
