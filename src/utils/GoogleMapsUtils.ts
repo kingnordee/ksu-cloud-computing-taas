@@ -1,26 +1,47 @@
-import latLng  from './latLng.json'
+import {IRadioButtonsInfo} from "../components/RadioButtons";
 
-let map: google.maps.Map;
-export const initMap = (elementId: string) => {
-    // const ref = useRef(null);
-    try{
-        const randomState = latLng.states[getRandomArbitrary(0, latLng.states.length)];
-        const currentLocation = randomState.point[getRandomArbitrary(0, randomState.point.length)]
-        map = new google.maps.Map(document.getElementById(elementId) as HTMLElement, {
-            center: currentLocation,
-            // center: { lat: GeolocationPosition.prototype.coords.latitude, lng: GeolocationPosition.prototype.coords.longitude },
-            zoom: 6
-        });
-
-        const marker = new google.maps.Marker({
-            position: currentLocation,
-            map: map,
-        });
-    }catch (e) {
-        console.log(e);
-    }
-}
+export const gMaps = () => google.maps;
+export type AddressType = google.maps.LatLng | string | google.maps.Place
+export type TravelModeType = google.maps.TravelMode
 
 export function getRandomArbitrary(min: number, max: number) {
     return Math.floor(Math.random() * (max - min) + min);
+}
+
+export interface IRouteRequest {
+    origin: AddressType,
+    destination: AddressType,
+    travelMode: TravelModeType
+}
+
+export const driving: IRadioButtonsInfo = {
+    name: "Driving",
+    value: "driving",
+    id: "driving"
+}
+export const bicycling: IRadioButtonsInfo = {
+    name: "Bicycling",
+    value: "bicycling",
+    id: "bicycling"
+}
+export const walking: IRadioButtonsInfo = {
+    name: "Walking",
+    value: "walking",
+    id: "walking"
+}
+export const transit: IRadioButtonsInfo = {
+    name: "Transit",
+    value: "transit",
+    id: "transit"
+}
+
+export const travelModes: IRadioButtonsInfo[] =  [driving, transit, bicycling, walking]
+
+export const getTravelMode = (mode?: string) => {
+  switch (mode) {
+      case "transit":  return gMaps().TravelMode.TRANSIT
+      case "bicycling":  return gMaps().TravelMode.BICYCLING
+      case "walking":  return gMaps().TravelMode.WALKING
+      default: return gMaps().TravelMode.DRIVING
+  }
 }
