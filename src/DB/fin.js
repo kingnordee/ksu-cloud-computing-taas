@@ -1,0 +1,1 @@
+connection.on('error', function() {});
