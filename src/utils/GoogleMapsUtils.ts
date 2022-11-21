@@ -14,28 +14,35 @@ export interface IRouteRequest {
     travelMode: TravelModeType
 }
 
-export const driving: IRadioButtonsInfo = {
-    name: "Driving",
-    value: "driving",
-    id: "driving"
-}
-export const bicycling: IRadioButtonsInfo = {
-    name: "Bicycling",
-    value: "bicycling",
-    id: "bicycling"
-}
-export const walking: IRadioButtonsInfo = {
-    name: "Walking",
-    value: "walking",
-    id: "walking"
-}
-export const transit: IRadioButtonsInfo = {
-    name: "Transit",
-    value: "transit",
-    id: "transit"
-}
+// export const driving: IRadioButtonsInfo = {
+//     name: "Driving",
+//     value: "driving",
+//     id: "driving"
+// }
+// export const bicycling: IRadioButtonsInfo = {
+//     name: "Bicycling",
+//     value: "bicycling",
+//     id: "bicycling"
+// }
+// export const walking: IRadioButtonsInfo = {
+//     name: "Walking",
+//     value: "walking",
+//     id: "walking"
+// }
 
-export const travelModes: IRadioButtonsInfo[] =  [driving, transit, bicycling, walking]
+// export const lyft_transit: IRadioButtonsInfo = {
+//     name: "Lyft-to-Transit",
+//     value: "lyft_transit",
+//     id: "lyft_transit"
+// }
+//
+// export const transit: IRadioButtonsInfo = {
+//     name: "Transit",
+//     value: "transit",
+//     id: "transit"
+// }
+
+// export const travelModes: IRadioButtonsInfo[] =  [driving, transit, lyft_transit]
 
 export const getTravelMode = (mode?: string) => {
   switch (mode) {

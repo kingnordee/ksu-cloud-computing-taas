@@ -1,14 +1,15 @@
 import React, {FC, useEffect, useState} from 'react';
-import {getTravelMode, IRouteRequest, travelModes} from "../utils/GoogleMapsUtils";
-import RadioButtons from "./RadioButtons";
+import {getTravelMode, IRouteRequest} from "../utils/GoogleMapsUtils";
+import RadioButtons, {IRadioButtonsInfo} from "./RadioButtons";
 
 export interface IRouteInput {
     requestFn: (body: IRouteRequest) => void
+    travelModes: IRadioButtonsInfo[]
 }
 
-const RouteInput: FC<IRouteInput> = ({requestFn}) => {
+const RouteInput: FC<IRouteInput> = ({requestFn, travelModes}) => {
     const [ routeInput, setRouteInput ] =
-        useState({ origin:"", destination:"", travelMode:getTravelMode()})
+        useState({ origin:"walmart stone mountain ga", destination:"walmart atlanta ga", travelMode:getTravelMode()})
 
     const [searchRouteState, setSearchRouteState] = useState(false);
 
@@ -23,12 +24,10 @@ const RouteInput: FC<IRouteInput> = ({requestFn}) => {
             destination: routeInput.destination,
             travelMode: routeInput.travelMode
         }
-        console.log(request);
         requestFn(request)
     }
 
     const handleRadioBtns = (value: string) => {
-        console.log(value);
         switch (value) {
             case "driving": {setRouteInput({...routeInput, travelMode:getTravelMode()}); break;}
             case "transit": {setRouteInput({...routeInput, travelMode:getTravelMode("transit")}); break;}
