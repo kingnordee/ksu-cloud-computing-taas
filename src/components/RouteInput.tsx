@@ -1,9 +1,10 @@
 import React, {FC, useEffect, useState} from 'react';
-import {getTravelMode, IRouteRequest} from "../utils/GoogleMapsUtils";
+import {driving, getTravelMode, IRouteRequest, lyft, lyftToTransit, transit, walking} from "../utils/GoogleMapsUtils";
 import RadioButtons, {IRadioButtonsInfo} from "./RadioButtons";
 
 export interface IRouteInput {
-    requestFn: (body: IRouteRequest) => void
+    requestFn: (body: IRouteRequest) => void,
+    // handleLyftToTransitRadio: (body: boolean) => void
     travelModes: IRadioButtonsInfo[]
 }
 
@@ -28,11 +29,13 @@ const RouteInput: FC<IRouteInput> = ({requestFn, travelModes}) => {
     }
 
     const handleRadioBtns = (value: string) => {
+        // value === "lyft-to-transit" ? handleLyftToTransitRadio(true) : handleLyftToTransitRadio(false)
         switch (value) {
-            case "driving": {setRouteInput({...routeInput, travelMode:getTravelMode()}); break;}
-            case "transit": {setRouteInput({...routeInput, travelMode:getTravelMode("transit")}); break;}
-            case "bicycling": {setRouteInput({...routeInput, travelMode:getTravelMode("bicycling")}); break;}
-            case "walking": {setRouteInput({...routeInput, travelMode:getTravelMode("walking")}); break;}
+            case driving.value: {setRouteInput({...routeInput, travelMode:getTravelMode()}); break;}
+            case lyft.value: {setRouteInput({...routeInput, travelMode:getTravelMode()}); break;}
+            case lyftToTransit.value: {setRouteInput({...routeInput, travelMode:getTravelMode("transit")}); break;}
+            case transit.value: {setRouteInput({...routeInput, travelMode:getTravelMode("transit")}); break;}
+            case walking.value: {setRouteInput({...routeInput, travelMode:getTravelMode("walking")}); break;}
         }
         (routeInput.origin != "" && routeInput.destination != "") && setSearchRouteState(!searchRouteState)
     }
@@ -59,6 +62,7 @@ const RouteInput: FC<IRouteInput> = ({requestFn, travelModes}) => {
                     </div>
                 </div>
                 <RadioButtons info={travelModes} handler={handleRadioBtns}/>
+                {/*<button className="maps">view map1</button>*/}
                 <button type="submit">Search Route</button>
             </form>
     </div>

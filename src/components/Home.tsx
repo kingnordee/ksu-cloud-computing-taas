@@ -1,5 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {getRandomArbitrary, getTravelMode, IRouteRequest} from "../utils/GoogleMapsUtils";
+import {
+    Cost, driving,
+    getRandomArbitrary,
+    getTravelMode,
+    IRouteRequest, lyft,
+    lyftToTransit,
+    metersToMiles, secondsToTime, transit, walking
+} from "../utils/GoogleMapsUtils";
 import RouteInput from "./RouteInput";
 import latLng from "../utils/latLng.json";
 import {IRadioButtonsInfo} from "./RadioButtons";
@@ -14,30 +21,12 @@ function Home() {
     const [transitRoute, setTransitRoute] = useState<google.maps.DirectionsResult | null>(null);
     const [routeFound, setRouteFound] = useState<boolean>(false);
 
-    const [transitMode, setTransitMode] = useState<IRadioButtonsInfo>({
-        name: "Transit",
-        value: "transit",
-        id: "transit",
-        distance: "",
-        duration: "",
-        cost: ""
-    });
-    const [lyftTransitMode, setLyftTransitMode] = useState<IRadioButtonsInfo>({
-        name: "Lyft-to-Transit",
-        value: "lyft-to-transit",
-        id: "lyft-to-transit",
-        distance: "",
-        duration: "",
-        cost: ""
-    });
-    const [drivingMode, setDrivingMode] = useState<IRadioButtonsInfo>({
-        name: "Driving",
-        value: "driving",
-        id: "driving",
-        distance: "",
-        duration: "",
-        cost: "N/A"
-    });
+    const [lyftToTransitMode, setLyftToTransitMode] = useState<IRadioButtonsInfo>(lyftToTransit);
+    const [lyftMode, setLyftMode] = useState<IRadioButtonsInfo>(lyft);
+    const [drivingMode, setDrivingMode] = useState<IRadioButtonsInfo>(driving);
+    const [transitMode, setTransitMode] = useState<IRadioButtonsInfo>(transit);
+    const [walkingMode, setWalkingMode] = useState<IRadioButtonsInfo>(walking);
+    // const [lyftToTransitChecked, setLyftToTransitChecked] = useState<boolean>(false);
 
     useEffect( () => {
         loadMap()
@@ -66,27 +55,60 @@ function Home() {
     const handleRouteRequest = (body:  IRouteRequest) => {
         getRoute(body)
 
+
+
         if(routeFound){
-            console.log(routeFound);
-            const  dirServ = new google.maps.DirectionsService();
+            const  dirServDrive = new google.maps.DirectionsService();
+            const  dirServTrans = new google.maps.DirectionsService();
+            const  dirServLyftToTrans = new google.maps.DirectionsService();
+            const  dirServWalk = new google.maps.DirectionsService();
 
-                dirServ.route({...body, travelMode: getTravelMode()}, (result, status) => {
+            dirServDrive.route({...body, travelMode: getTravelMode()}, (result, status) => {
                     const  info = result?.routes[0].legs[0]
+                    const distance = metersToMiles(info?.distance.value);
+                    const duration = secondsToTime(info?.duration.value);
+
                     setDrivingRoute(result)
-                    setDrivingMode({...drivingMode, duration: info?.duration.text, distance:  info?.distance.text})
-                })
-
-                dirServ.route({...body, travelMode: getTravelMode("transit")}, (result, status) => {
+                    setDrivingMode({...drivingMode, duration, distance: distance+" mi", cost: "$"+(parseFloat(distance) * Cost.driveMile).toFixed(2)})
+                    const lyftCost = (parseFloat(distance) * Cost.lyftMile);
+                    setLyftMode({...lyftMode, duration, distance: distance+" mi",  cost: "$"+(lyftCost > 10 ? lyftCost : 10).toFixed(2)})
+                });
+            dirServDrive.route({...body, travelMode: getTravelMode("transit")}, (result, status) => {
                     const  info = result?.routes[0].legs[0]
+                    const distance = metersToMiles(info?.distance.value);
+                    const duration = secondsToTime(info?.duration.value);
                     setTransitRoute(result)
-                    setTransitMode({...transitMode, duration: info?.duration.text, distance:  info?.distance.text})
-                })
+                    setTransitMode({...transitMode, duration, distance: distance+" mi", cost: "$"+Cost.transit.toFixed(2)})
+
+                dirServDrive.route({origin: info?.steps[0].start_location, destination: info?.steps[0].end_location, travelMode: getTravelMode()}, (result2, status2) => {
+                        const  info2 = result2?.routes[0].legs[0]
+                        const lyftToTransitDistance = metersToMiles((info?.distance.value - info?.steps[0].distance.value) + info2?.distance.value);
+                        const lyftToTransitDuration = secondsToTime((info?.duration.value - info?.steps[0].duration.value) + info2?.duration.value);
+                        const lyftToTransitCost = parseFloat(lyftToTransitDistance) * Cost.lyftMile;
+                        const totalLyftTAndTransitCost = lyftToTransitCost + Cost.transit;
+                        setLyftToTransitMode({...lyftToTransitMode, duration: lyftToTransitDuration,  distance: lyftToTransitDistance+" mi", cost: "$"+totalLyftTAndTransitCost.toFixed(2)})
+                    });
+                });
+            dirServDrive.route({...body, travelMode: getTravelMode("walking")}, (result, status) => {
+                    const  info = result?.routes[0].legs[0]
+                    const distance = metersToMiles(info?.distance.value)+" mi";
+                    const duration = secondsToTime(info?.duration.value);
+                    setTransitRoute(result)
+                    setWalkingMode({...walkingMode, duration, distance})
+                });
         }
     }
+
+    // const handleLyftToTansitRadio = (checked: boolean) => {
+    //   setLyftToTransitChecked(checked)
+    // }
 
     const logger = () => {
         console.log(drivingRoute?.routes[0].legs[0]);
         console.log(transitRoute?.routes[0].legs[0]);
+        // console.log(lyftToTransitCost);
+        // console.log(lyftToTransitDistance);
+        // console.log(lyftToTransitDuration);
     }
 
     const getRoute = (request: IRouteRequest) => {
@@ -123,7 +145,10 @@ function Home() {
             <div id="map"/>
             <div  className="panel">
                 <button onClick={logger}>Log</button>
-                <RouteInput  requestFn={handleRouteRequest} travelModes={[drivingMode, transitMode, lyftTransitMode]}/>
+                <RouteInput requestFn={handleRouteRequest} travelModes={[lyftToTransitMode,  lyftMode,  drivingMode, transitMode, walkingMode]}/>
+                {/*{lyftToTransitChecked && <div className="lyftPanel">*/}
+                {/*    LyftToTrans*/}
+                {/*</div>}*/}
                 <div id="renderRoute" className={`${requestedRoute ?  "renderRoute" : ""}`}/>
             </div>
         </div>
