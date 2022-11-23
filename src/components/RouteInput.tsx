@@ -1,16 +1,20 @@
 import React, {FC, useEffect, useState} from 'react';
-import {getTravelMode, IRouteRequest, travelModes} from "../utils/GoogleMapsUtils";
-import RadioButtons from "./RadioButtons";
+import {driving, getTravelMode, IRouteRequest, lyft, lyftToTransit, transit, walking} from "../utils/GoogleMapsUtils";
+import RadioButtons, {IRadioButtonsInfo} from "./RadioButtons";
 
 export interface IRouteInput {
-    requestFn: (body: IRouteRequest) => void
+    requestFn: (body: IRouteRequest, lyftToTrans: boolean) => void,
+    setLyftView: (lyftView: boolean) => void,
+    travelModes: IRadioButtonsInfo[]
 }
 
-const RouteInput: FC<IRouteInput> = ({requestFn}) => {
+const RouteInput: FC<IRouteInput> = ({requestFn, travelModes, setLyftView}) => {
     const [ routeInput, setRouteInput ] =
-        useState({ origin:"", destination:"", travelMode:getTravelMode()})
+        useState({ origin:"walmart stone mountain ga", destination:"walmart atlanta ga", travelMode:getTravelMode()})
 
     const [searchRouteState, setSearchRouteState] = useState(false);
+    const [lyftToTrans, setLyftToTrans] = useState(false);
+    const [lyftTransToggle, setLyftTransToggle] = useState(false);
 
     useEffect(() => {
         (routeInput.origin != "" && routeInput.destination != "") && handleSearchRoute();
@@ -21,21 +25,36 @@ const RouteInput: FC<IRouteInput> = ({requestFn}) => {
         const request: IRouteRequest = {
             origin: routeInput.origin,
             destination: routeInput.destination,
-            travelMode: routeInput.travelMode
+            travelMode: routeInput.travelMode,
+            transitOptions: {
+                modes: [google.maps.TransitMode.RAIL]
+            }
         }
-        console.log(request);
-        requestFn(request)
+        requestFn(request, lyftToTrans)
     }
 
     const handleRadioBtns = (value: string) => {
-        console.log(value);
+        setLyftToTrans(value === "lyft-to-transit")
+        if(!(value === "lyft-to-transit")){
+            setLyftView(false)
+        }
+        // const newState = !lyftTransToggle
+        // setLyftTransToggle(newState)
+        // setLyftView(newState)
         switch (value) {
-            case "driving": {setRouteInput({...routeInput, travelMode:getTravelMode()}); break;}
-            case "transit": {setRouteInput({...routeInput, travelMode:getTravelMode("transit")}); break;}
-            case "bicycling": {setRouteInput({...routeInput, travelMode:getTravelMode("bicycling")}); break;}
-            case "walking": {setRouteInput({...routeInput, travelMode:getTravelMode("walking")}); break;}
+            case driving.value: {setRouteInput({...routeInput, travelMode:getTravelMode()}); break;}
+            case lyft.value: {setRouteInput({...routeInput, travelMode:getTravelMode()}); break;}
+            case lyftToTransit.value: {setRouteInput({...routeInput, travelMode:getTravelMode("transit")}); break;}
+            case transit.value: {setRouteInput({...routeInput, travelMode:getTravelMode("transit")}); break;}
+            case walking.value: {setRouteInput({...routeInput, travelMode:getTravelMode("walking")}); break;}
         }
         (routeInput.origin != "" && routeInput.destination != "") && setSearchRouteState(!searchRouteState)
+    }
+
+    const handleLyftViewToggle = () => {
+        const newState = !lyftTransToggle
+        setLyftTransToggle(newState)
+        setLyftView(newState)
     }
 
     return <div className="routeFormWrapper">
@@ -60,7 +79,12 @@ const RouteInput: FC<IRouteInput> = ({requestFn}) => {
                     </div>
                 </div>
                 <RadioButtons info={travelModes} handler={handleRadioBtns}/>
-                <button type="submit">Search Route</button>
+                <div className="btns">
+                    {lyftToTrans && <button onClick={handleLyftViewToggle}>{lyftTransToggle ? "View Transit Map" : "View Lyft Map"}</button>}
+                    <div/>
+                    <button type="submit">Search Route</button>
+                </div>
+
             </form>
     </div>
 };

@@ -1,7 +1,7 @@
 .routeFormWrapper{
   *{
     //border-radius: 4px;
-    //border: none;
+    //border: solid red 2px;
     //color: yellow;
   }
   background: steelblue;
@@ -33,13 +33,24 @@
     }
 
     .radioButtons{
+      *{
+        min-width: fit-content;
+      }
+
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: center;
 
-      p{
+      .mainP{
+        display: flex;
+        align-items: flex-start;
         margin: 10px;
       }
+    }
+
+    .btns{
+      display: flex;
+      justify-content: space-between;
     }
 
     button{
