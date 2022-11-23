@@ -13,7 +13,7 @@ export interface IRadioButtons {
     handler: (selected: string) => void,
 }
 const RadioButtons: FC<IRadioButtons> = ({info, handler}) => {
-    const [selection, setSelection] = useState<String>("driving");
+    const [selection, setSelection] = useState<String>("transit");
 
     const radioHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSelection(event.target.value);

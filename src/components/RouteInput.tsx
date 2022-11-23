@@ -10,7 +10,7 @@ export interface IRouteInput {
 
 const RouteInput: FC<IRouteInput> = ({requestFn, travelModes, setLyftView}) => {
     const [ routeInput, setRouteInput ] =
-        useState({ origin:"walmart stone mountain ga", destination:"walmart atlanta ga", travelMode:getTravelMode()})
+        useState({ origin:"", destination:"", travelMode:getTravelMode()})
 
     const [searchRouteState, setSearchRouteState] = useState(false);
     const [lyftToTrans, setLyftToTrans] = useState(false);
