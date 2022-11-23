@@ -33,6 +33,10 @@
     }
 
     .radioButtons{
+      *{
+        min-width: fit-content;
+      }
+
       display: flex;
       align-items: flex-start;
       justify-content: center;
@@ -42,6 +46,11 @@
         align-items: flex-start;
         margin: 10px;
       }
+    }
+
+    .btns{
+      display: flex;
+      justify-content: space-between;
     }
 
     button{

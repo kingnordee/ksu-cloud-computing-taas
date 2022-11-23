@@ -11,7 +11,10 @@ export function getRandomArbitrary(min: number, max: number) {
 export interface IRouteRequest {
     origin: AddressType,
     destination: AddressType,
-    travelMode: TravelModeType
+    travelMode: TravelModeType,
+    transitOptions: {
+        modes?: google.maps.TransitMode[];
+    }
 }
 
 export const getTravelMode = (mode?: string) => {

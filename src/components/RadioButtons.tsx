@@ -22,7 +22,6 @@ const RadioButtons: FC<IRadioButtons> = ({info, handler}) => {
 
     return (
         <div className="radioButtons">
-                {/*<legend>Travel Mode</legend>*/}
                 {
                     info.map((btn, idx) => {
                         const lName = <span>{btn.name}<br/></span>
@@ -30,7 +29,7 @@ const RadioButtons: FC<IRadioButtons> = ({info, handler}) => {
                         const lDuration = btn.duration && <span>{btn.duration}<br/></span>
                         const lCost = btn.duration && <span>{btn.cost}<br/></span>
                         const labels = <span>{lName}{lDistance}{lDuration}{lCost}</span>
-                        return  <div>
+                        return  <div key={idx}>
                             <p className='mainP' key={idx}>
                                 <input
                                     type="radio"
@@ -40,11 +39,8 @@ const RadioButtons: FC<IRadioButtons> = ({info, handler}) => {
                                     onChange={radioHandler}
                                     checked={btn.value == selection}
                                 />
-                                <p><label htmlFor={btn.id}>{labels}</label></p>
+                                <span><label htmlFor={btn.id}>{labels}</label></span>
                             </p>
-                            {/*<p>{btn.distance}</p>*/}
-                            {/*<p>{btn.duration}</p>*/}
-                            {/*<p>${btn.cost}</p>*/}
                         </div>
                     })
                 }

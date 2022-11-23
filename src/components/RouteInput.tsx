@@ -3,16 +3,18 @@ import {driving, getTravelMode, IRouteRequest, lyft, lyftToTransit, transit, wal
 import RadioButtons, {IRadioButtonsInfo} from "./RadioButtons";
 
 export interface IRouteInput {
-    requestFn: (body: IRouteRequest) => void,
-    // handleLyftToTransitRadio: (body: boolean) => void
+    requestFn: (body: IRouteRequest, lyftToTrans: boolean) => void,
+    setLyftView: (lyftView: boolean) => void,
     travelModes: IRadioButtonsInfo[]
 }
 
-const RouteInput: FC<IRouteInput> = ({requestFn, travelModes}) => {
+const RouteInput: FC<IRouteInput> = ({requestFn, travelModes, setLyftView}) => {
     const [ routeInput, setRouteInput ] =
         useState({ origin:"walmart stone mountain ga", destination:"walmart atlanta ga", travelMode:getTravelMode()})
 
     const [searchRouteState, setSearchRouteState] = useState(false);
+    const [lyftToTrans, setLyftToTrans] = useState(false);
+    const [lyftTransToggle, setLyftTransToggle] = useState(false);
 
     useEffect(() => {
         (routeInput.origin != "" && routeInput.destination != "") && handleSearchRoute();
@@ -23,13 +25,22 @@ const RouteInput: FC<IRouteInput> = ({requestFn, travelModes}) => {
         const request: IRouteRequest = {
             origin: routeInput.origin,
             destination: routeInput.destination,
-            travelMode: routeInput.travelMode
+            travelMode: routeInput.travelMode,
+            transitOptions: {
+                modes: [google.maps.TransitMode.RAIL]
+            }
         }
-        requestFn(request)
+        requestFn(request, lyftToTrans)
     }
 
     const handleRadioBtns = (value: string) => {
-        // value === "lyft-to-transit" ? handleLyftToTransitRadio(true) : handleLyftToTransitRadio(false)
+        setLyftToTrans(value === "lyft-to-transit")
+        if(!(value === "lyft-to-transit")){
+            setLyftView(false)
+        }
+        // const newState = !lyftTransToggle
+        // setLyftTransToggle(newState)
+        // setLyftView(newState)
         switch (value) {
             case driving.value: {setRouteInput({...routeInput, travelMode:getTravelMode()}); break;}
             case lyft.value: {setRouteInput({...routeInput, travelMode:getTravelMode()}); break;}
@@ -38,6 +49,12 @@ const RouteInput: FC<IRouteInput> = ({requestFn, travelModes}) => {
             case walking.value: {setRouteInput({...routeInput, travelMode:getTravelMode("walking")}); break;}
         }
         (routeInput.origin != "" && routeInput.destination != "") && setSearchRouteState(!searchRouteState)
+    }
+
+    const handleLyftViewToggle = () => {
+        const newState = !lyftTransToggle
+        setLyftTransToggle(newState)
+        setLyftView(newState)
     }
 
     return <div className="routeFormWrapper">
@@ -62,8 +79,12 @@ const RouteInput: FC<IRouteInput> = ({requestFn, travelModes}) => {
                     </div>
                 </div>
                 <RadioButtons info={travelModes} handler={handleRadioBtns}/>
-                {/*<button className="maps">view map1</button>*/}
-                <button type="submit">Search Route</button>
+                <div className="btns">
+                    {lyftToTrans && <button onClick={handleLyftViewToggle}>{lyftTransToggle ? "View Transit Map" : "View Lyft Map"}</button>}
+                    <div/>
+                    <button type="submit">Search Route</button>
+                </div>
+
             </form>
     </div>
 };
